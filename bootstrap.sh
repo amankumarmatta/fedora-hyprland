@@ -104,6 +104,16 @@ stow_dotfiles() {
         ok "$pkg stowed → ~/.config"
     done
 
+    info "Preparing home-level dotfiles"
+
+    # ----------------------------------------------------------
+    # Handle existing ~/.zshrc safely
+    # ----------------------------------------------------------
+    if [[ -f "$HOME/.zshrc" && ! -L "$HOME/.zshrc" ]]; then
+        warn "~/.zshrc exists and is not a symlink — removing it before stowing"
+        rm "$HOME/.zshrc"
+    fi
+
     info "Stowing home-level packages"
     for pkg in "${HOME_PACKAGES[@]}"; do
         [[ -d "$pkg" ]] || err "Missing package: $pkg"
